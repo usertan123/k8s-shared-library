@@ -19,7 +19,7 @@ def call(Map config = [:]) {
         }
         sh """
             echo "Running Trivy Image scan..."
-            trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName}:${imageTag} -f json -o ${reportFile}
+            trivy image --skip-update --exit-code 1 --severity HIGH,CRITICAL ${imageName}:${imageTag} -f json -o ${reportFile}
         """
     }
     
