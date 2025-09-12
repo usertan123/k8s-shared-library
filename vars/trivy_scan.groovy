@@ -11,7 +11,7 @@ def call(Map config = [:]) {
     if (scanType == "fs") {
         sh """
             echo "Running Trivy FS scan..."
-            trivy fs ${path} -f json -o ${reportFile}
+            trivy fs ${path} --severity HIGH,CRITICAL -f json -o ${reportFile}
         """
     } else if (scanType == "image") {
         if (!imageName) {
