@@ -40,18 +40,14 @@ def call(Map config = [:]) {
                 sed -i "s|host: .*|host: easyshop.techinferno.shop|g" ${manifestsPath}/nginx-ingress.yml
             fi
             
-            # Check for changes
-            if git diff --quiet; then
-                echo "No changes to commit"
-            else
-                # Commit and push changes
+            if ! git diff --quiet; then
                 git add ${manifestsPath}/*.yml
                 git commit -m "Update image tags to ${imageTag} and ensure correct domain [ci skip]"
-                
-                # Set up credentials for push
-                # git remote set-url origin https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/usertan123/k8s-e-commerce-app.git
                 git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/usertan123/k8s-e-commerce-app.git HEAD:${gitBranch}
+            else
+                echo "No changes to commit"
             fi
+            
         """
     }
 }
