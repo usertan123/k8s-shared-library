@@ -19,9 +19,13 @@ def call(Map config = [:]) {
         }
             def cacheDir = "${env.WORKSPACE}/trivy-cache-${imageName.replaceAll('/', '_')}-${imageTag}"
 
+        // sh """
+        //     echo "Running Trivy Image scan..."
+        //     trivy image --skip-db-update --exit-code 0 --severity HIGH,CRITICAL --skip-files .next/cache,.next/static --cache-dir ${cacheDir}   ${imageName}:${imageTag} -f json -o ${reportFile}
+        // """
         sh """
             echo "Running Trivy Image scan..."
-            trivy image --skip-db-update --exit-code 0 --severity HIGH,CRITICAL --skip-files .next/cache,.next/static --cache-dir ${cacheDir}   ${imageName}:${imageTag} -f json -o ${reportFile}
+            trivy image --exit-code 0 --severity HIGH,CRITICAL --skip-files .next/cache,.next/static --cache-dir ${cacheDir}   ${imageName}:${imageTag} -f json -o ${reportFile}
         """
     }
     
