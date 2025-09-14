@@ -15,7 +15,7 @@ def call(Map config = [:]) {
     // """
     withEnv(["PATH+NODE=${tool nodeTool}/bin"]) {
         sh """
-            npm install
+            npm ci
             ${testCommand}
         """
     }
