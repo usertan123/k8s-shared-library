@@ -17,6 +17,8 @@ def call(Map config = [:]) {
         if (!imageName) {
             error "Image name is required for Trivy image scan"
         }
+            def cacheDir = "trivy-cache-${imageName.replaceAll('/', '_')}-${imageTag}"
+
         sh """
             echo "Running Trivy Image scan..."
             trivy image --skip-db-update --exit-code 1 --severity HIGH,CRITICAL --skip-files .next/cache,.next/static ${imageName}:${imageTag} -f json -o ${reportFile}
