@@ -9,6 +9,8 @@ def call(Map config = [:]) {
     def gitCredentials = config.gitCredentials ?: 'github-credentials'
     def gitUserName = config.gitUserName ?: 'usertan123'
     def gitUserEmail = config.gitUserEmail ?: 'tan2018carlson@gmail.com'
+    def gitBranch = config.gitBranch ?: 'main'  // default to main if not passed
+
     
     echo "Updating Kubernetes manifests with image tag: ${imageTag}"
     
@@ -47,8 +49,8 @@ def call(Map config = [:]) {
                 git commit -m "Update image tags to ${imageTag} and ensure correct domain [ci skip]"
                 
                 # Set up credentials for push
-                git remote set-url origin https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/usertan123/k8s-e-commerce-app.git
-                git push origin HEAD:\${GIT_BRANCH}
+                # git remote set-url origin https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/usertan123/k8s-e-commerce-app.git
+                git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/usertan123/k8s-e-commerce-app.git HEAD:${gitBranch}
             fi
         """
     }
