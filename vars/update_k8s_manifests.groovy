@@ -26,7 +26,7 @@ def call(Map config = [:]) {
         """
         
         // Update deployment manifests with new image tags - using proper Linux sed syntax
-        sh '''
+        sh """
             
             set -e
             # Update main application deployment - note the correct image name is tanmaytech/easyshop-app
@@ -50,7 +50,7 @@ def call(Map config = [:]) {
                 echo "No changes to commit"
             fi
             
-        '''
+        """
     }
 }
 // https://github.com/usertan123/k8s-e-commerce-app.git
