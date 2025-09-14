@@ -1,5 +1,3 @@
-#!/usr/bin/env groovy
-
 /**
  * Update Kubernetes manifests with new image tags
  */
@@ -26,31 +24,31 @@ def call(Map config = [:]) {
         """
         
         // Update deployment manifests with new image tags - using proper Linux sed syntax
-        sh """  
+        sh """
             set -e
-            # Update main application deployment - note the correct image name is tanmaytech/easyshop-app
+            # Update images
             sed -i "s|image: tanmaytech/easyshop-app:.*|image: tanmaytech/easyshop-app:${imageTag}|g" ${manifestsPath}/easyshop-deployment.yml
-            
-            # Update migration job if it exists
+
             if [ -f "${manifestsPath}/migration-job.yml" ]; then
                 sed -i "s|image: tanmaytech/easyshop-migration:.*|image: tanmaytech/easyshop-migration:${imageTag}|g" ${manifestsPath}/migration-job.yml
             fi
-            
-            # Ensure ingress is using the correct domain
+
             if [ -f "${manifestsPath}/nginx-ingress.yml" ]; then
                 sed -i "s|host: .*|host: easyshop.techinferno.shop|g" ${manifestsPath}/nginx-ingress.yml
             fi
-            
+
             if ! git diff --quiet; then
                 echo "Changes detected. Committing and pushing..."
                 git add ${manifestsPath}/*.yml
                 git commit -m "Update image tags to ${imageTag} and ensure correct domain [ci skip]"
-                git push https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/usertan123/k8s-e-commerce-app.git HEAD:${gitBranch}
+                git remote remove origin || true
+                git remote add origin https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/usertan123/k8s-e-commerce-app.git
+                git push origin HEAD:${gitBranch}
             else
                 echo "No changes to commit"
             fi
-            
         """
+
     }
 }
 // https://github.com/usertan123/k8s-e-commerce-app.git
