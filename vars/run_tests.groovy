@@ -3,7 +3,7 @@ def call(Map config = [:]) {
     // Default test command if not provided
     def testCommand = config.testCommand ?: "npm test"
     
-    def nodeTool = config.nodeTool ?: "NodeJS 18.0.0"
+    def nodeTool = config.nodeTool ?: "Node18"
 
     echo "Running unit tests with Node tool: ${nodeTool}"
 
