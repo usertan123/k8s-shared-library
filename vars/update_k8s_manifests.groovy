@@ -26,8 +26,7 @@ def call(Map config = [:]) {
         """
         
         // Update deployment manifests with new image tags - using proper Linux sed syntax
-        sh """
-            
+        sh """  
             set -e
             # Update main application deployment - note the correct image name is tanmaytech/easyshop-app
             sed -i "s|image: tanmaytech/easyshop-app:.*|image: tanmaytech/easyshop-app:${imageTag}|g" ${manifestsPath}/easyshop-deployment.yml
@@ -43,6 +42,7 @@ def call(Map config = [:]) {
             fi
             
             if ! git diff --quiet; then
+                echo "Changes detected. Committing and pushing..."
                 git add ${manifestsPath}/*.yml
                 git commit -m "Update image tags to ${imageTag} and ensure correct domain [ci skip]"
                 git push https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/usertan123/k8s-e-commerce-app.git HEAD:${gitBranch}
